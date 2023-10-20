@@ -10,16 +10,18 @@ import java.util.List;
 public class PedidoController {
 
     private List<Pedido> pedidos = new ArrayList<>();
+    private Long proximoId = 1L;
 
     @GetMapping("/")
     public List<Pedido> listarPedidos() {
         return pedidos;
+
     }
 
     @GetMapping("/{id}")
-    public Pedido encontrarPedidoPorId(@PathVariable int id) {
+    public Pedido encontrarPedidoPorId(@PathVariable Long id) {
         for (Pedido pedido : pedidos) {
-            if (pedido.getId() == id) {
+            if (pedido.getId().equals(id)) {
                 return pedido;
             }
         }
@@ -28,15 +30,17 @@ public class PedidoController {
 
     @PostMapping("/")
     public Pedido adicionarPedido(@RequestBody Pedido pedido) {
+        pedido.setId(proximoId++);
         pedidos.add(pedido);
         return pedido;
     }
 
     @PutMapping("/{id}")
-    public Pedido editarPedido(@PathVariable int id, @RequestBody Pedido pedidoAtualizado) {
+    public Pedido editarPedido(@PathVariable Long id, @RequestBody Pedido pedidoAtualizado) {
         for (int i = 0; i < pedidos.size(); i++) {
             Pedido pedido = pedidos.get(i);
-            if (pedido.getId() == id) {
+            if (pedido.getId().equals(id)) {
+                pedidoAtualizado.setId(id);
                 pedidos.set(i, pedidoAtualizado);
                 return pedidoAtualizado;
             }
@@ -45,12 +49,7 @@ public class PedidoController {
     }
 
     @DeleteMapping("/{id}")
-    public void excluirPedido(@PathVariable int id) {
-        for (Pedido pedido : pedidos) {
-            if (pedido.getId() == id) {
-                pedidos.remove(pedido);
-                return;
-            }
-        }
+    public void excluirPedido(@PathVariable Long id) {
+        pedidos.removeIf(pedido -> pedido.getId().equals(id));
     }
 }

@@ -5,8 +5,6 @@ public class Pedido {
     private String nome;
     private double preco;
 
-    public Pedido() {
-    }
 
     public Pedido(Long id, String nome, double preco) {
         this.id = id;
